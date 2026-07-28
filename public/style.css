@@ -1,131 +1,280 @@
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-  font-family: 'Segoe UI', Arial, sans-serif;
+:root {
+  --bg: #0a0a0a;
+  --bg2: #0d1117;
+  --green: #00ff41;
+  --green-dim: #00aa2a;
+  --green-dark: #003d0f;
+  --yellow: #ffff00;
+  --red: #ff0000;
+  --gray: #444;
+  --text: #ccffcc;
 }
 
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
 body {
-  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  background: var(--bg);
   min-height: 100vh;
   display: flex;
   justify-content: center;
   align-items: flex-start;
-  padding: 40px 16px;
+  padding: 30px 16px;
+  font-family: 'Share Tech Mono', monospace;
+  color: var(--green);
+  position: relative;
+  overflow-x: hidden;
 }
 
-.container {
-  background: #fff;
+/* Efecto scanlines de pantalla CRT */
+.scanlines {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0, 255, 65, 0.015) 2px,
+    rgba(0, 255, 65, 0.015) 4px
+  );
+  pointer-events: none;
+  z-index: 100;
+}
+
+.terminal {
   width: 100%;
-  max-width: 520px;
-  border-radius: 16px;
-  padding: 32px;
-  box-shadow: 0 20px 50px rgba(0,0,0,0.25);
+  max-width: 680px;
+  border: 1px solid var(--green-dim);
+  border-radius: 6px;
+  background: var(--bg2);
+  box-shadow:
+    0 0 20px rgba(0, 255, 65, 0.15),
+    0 0 60px rgba(0, 255, 65, 0.05),
+    inset 0 0 30px rgba(0, 0, 0, 0.5);
 }
 
-h1 {
-  text-align: center;
-  margin-bottom: 24px;
-  color: #333;
-}
-
-.task-form {
+.terminal-header {
   display: flex;
+  align-items: center;
   gap: 8px;
+  padding: 10px 16px;
+  background: #111;
+  border-bottom: 1px solid var(--green-dark);
+  border-radius: 6px 6px 0 0;
+}
+
+.dot {
+  width: 12px; height: 12px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.dot.red { background: #ff5f57; }
+.dot.yellow { background: #ffbd2e; }
+.dot.green { background: #28c840; }
+
+.terminal-title {
+  font-size: 12px;
+  color: #666;
+  margin-left: 8px;
+  letter-spacing: 0.5px;
+}
+
+.terminal-body {
+  padding: 20px 24px;
+}
+
+.boot-text {
   margin-bottom: 16px;
 }
 
-.task-form input {
+.boot-text p {
+  font-size: 13px;
+  color: var(--green-dim);
+  line-height: 1.8;
+}
+
+.prompt { color: var(--green); margin-right: 6px; }
+.cmd { color: var(--yellow); margin-right: 8px; }
+.ok { color: var(--green); font-weight: bold; }
+
+.blink {
+  animation: blink 1s step-end infinite;
+}
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+.divider {
+  color: var(--green-dark);
+  font-size: 13px;
+  margin: 14px 0;
+  letter-spacing: 1px;
+}
+
+.input-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.input-row input {
   flex: 1;
-  padding: 12px 14px;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  font-size: 15px;
-}
-
-.task-form button {
-  padding: 12px 20px;
-  background: #6366f1;
-  color: white;
+  background: transparent;
   border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  font-weight: 600;
-  transition: background 0.2s;
+  border-bottom: 1px solid var(--green-dark);
+  color: var(--green);
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 14px;
+  padding: 6px 4px;
+  outline: none;
+  caret-color: var(--green);
 }
 
-.task-form button:hover { background: #4f46e5; }
+.input-row input::placeholder { color: #1a4a1a; }
+.input-row input:focus { border-bottom-color: var(--green); }
 
-.filter-wrapper { margin-bottom: 20px; }
+.input-row button {
+  background: transparent;
+  border: 1px solid var(--green);
+  color: var(--green);
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 13px;
+  padding: 6px 14px;
+  cursor: pointer;
+  letter-spacing: 1px;
+  transition: all 0.15s;
+  flex-shrink: 0;
+}
 
-.filter-wrapper input {
-  width: 100%;
-  padding: 10px 14px;
-  border: 1px solid #eee;
-  background: #f9fafb;
-  border-radius: 8px;
-  font-size: 14px;
+.input-row button:hover {
+  background: var(--green);
+  color: var(--bg);
+}
+
+.filter-row { margin-top: 4px; }
+
+.status-message {
+  min-height: 16px;
+  font-size: 12px;
+  color: var(--red);
+  margin-bottom: 8px;
 }
 
 .task-list {
   list-style: none;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 6px;
 }
 
 .task-item {
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 12px 14px;
-  background: #f9fafb;
-  border-radius: 8px;
-  border: 1px solid #eee;
+  padding: 8px 10px;
+  border: 1px solid var(--green-dark);
+  background: rgba(0, 255, 65, 0.02);
+  font-size: 13.5px;
+  transition: background 0.15s;
+}
+
+.task-item:hover {
+  background: rgba(0, 255, 65, 0.06);
+  border-color: var(--green-dim);
+}
+
+.task-item.completed {
+  opacity: 0.45;
+  border-color: #1a2a1a;
 }
 
 .task-item.completed .task-title {
   text-decoration: line-through;
-  color: #999;
+  color: var(--green-dim);
+}
+
+/* Checkbox estilo terminal */
+.check-box {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 16px; height: 16px;
+  border: 1px solid var(--green-dim);
+  background: transparent;
+  cursor: pointer;
+  position: relative;
+  flex-shrink: 0;
+}
+
+.check-box:checked { border-color: var(--green); }
+
+.check-box:checked::after {
+  content: '✓';
+  position: absolute;
+  top: -3px; left: 1px;
+  color: var(--green);
+  font-size: 14px;
+}
+
+.task-index {
+  color: var(--green-dim);
+  font-size: 11px;
+  flex-shrink: 0;
+  min-width: 24px;
 }
 
 .task-title {
   flex: 1;
-  font-size: 15px;
+  color: var(--text);
+  cursor: pointer;
   word-break: break-word;
-  cursor: pointer;
 }
 
-.task-item input[type="checkbox"] {
-  width: 18px;
-  height: 18px;
-  cursor: pointer;
-}
+.task-title::before { content: '"'; color: var(--green-dim); }
+.task-title::after { content: '"'; color: var(--green-dim); }
 
-.task-actions { display: flex; gap: 6px; }
+.task-actions { display: flex; gap: 4px; flex-shrink: 0; }
 
 .task-actions button {
-  border: none;
   background: transparent;
+  border: none;
+  color: var(--green-dim);
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 11px;
+  padding: 3px 7px;
   cursor: pointer;
-  font-size: 16px;
-  padding: 4px 8px;
-  border-radius: 6px;
-  transition: background 0.2s;
+  border: 1px solid transparent;
+  transition: all 0.15s;
 }
 
-.task-actions button:hover { background: #eee; }
+.task-actions button:hover {
+  border-color: var(--green-dim);
+  color: var(--green);
+}
 
 .empty-message {
-  text-align: center;
-  color: #999;
-  margin-top: 20px;
+  color: var(--green-dim);
+  font-size: 13px;
+  padding: 16px 0;
+  font-style: italic;
 }
 
-.status-message {
-  text-align: center;
-  font-size: 13px;
-  color: #e11d48;
-  min-height: 18px;
-  margin-bottom: 8px;
+.footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 12px;
+  color: var(--green-dim);
+  margin-top: 6px;
+}
+
+.cursor-blink {
+  animation: blink 0.8s step-end infinite;
+  color: var(--green);
+}
+
+@media (max-width: 480px) {
+  .terminal-body { padding: 14px 14px; }
+  .boot-text { display: none; }
 }
