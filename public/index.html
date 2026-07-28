@@ -3,27 +3,58 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>To-Do List</title>
+  <title>TASK_MANAGER // DAVE</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=VT323&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="container">
-    <h1>📋 To-Do List - Dave</h1>
-
-    <form id="task-form" class="task-form">
-      <input type="text" id="task-input" placeholder="Escribe una nueva tarea..." required>
-      <button type="submit">Agregar</button>
-    </form>
-
-    <div class="filter-wrapper">
-      <input type="text" id="filter-input" placeholder="🔍 Filtrar tareas...">
+  <div class="scanlines"></div>
+  <div class="terminal">
+    <div class="terminal-header">
+      <span class="dot red"></span>
+      <span class="dot yellow"></span>
+      <span class="dot green"></span>
+      <span class="terminal-title">task_manager_v1.0 — dave@vps:~$</span>
     </div>
 
-    <div id="status-message" class="status-message"></div>
+    <div class="terminal-body">
+      <div class="boot-text">
+        <p><span class="prompt">$</span> Iniciando sistema de tareas...</p>
+        <p><span class="prompt">$</span> Conexión a base de datos: <span class="ok">[OK]</span></p>
+        <p><span class="prompt">$</span> Módulos cargados: <span class="ok">[OK]</span></p>
+        <p><span class="prompt">$</span> Listo. Esperando input del usuario<span class="blink">_</span></p>
+      </div>
 
-    <ul id="task-list" class="task-list"></ul>
+      <div class="divider">─────────────────────────────────────────</div>
 
-    <p id="empty-message" class="empty-message" style="display:none;">No hay tareas para mostrar.</p>
+      <form id="task-form" class="input-row">
+        <span class="prompt">$</span>
+        <span class="cmd">add_task</span>
+        <input type="text" id="task-input" placeholder="descripcion de la tarea..." autocomplete="off" required>
+        <button type="submit">[EXEC]</button>
+      </form>
+
+      <div class="input-row filter-row">
+        <span class="prompt">$</span>
+        <span class="cmd">grep</span>
+        <input type="text" id="filter-input" placeholder="buscar patron..." autocomplete="off">
+      </div>
+
+      <div class="divider">─────────────────────────────────────────</div>
+
+      <div id="status-message" class="status-message"></div>
+
+      <ul id="task-list" class="task-list"></ul>
+
+      <p id="empty-message" class="empty-message" style="display:none;">// No se encontraron registros en la base de datos.</p>
+
+      <div class="divider">─────────────────────────────────────────</div>
+      <div class="footer">
+        <span id="task-count"></span>
+        <span class="cursor-blink">█</span>
+      </div>
+    </div>
   </div>
 
   <script src="app.js"></script>
