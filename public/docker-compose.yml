@@ -1,9 +1,9 @@
-﻿services:
+services:
   db:
     image: postgres:15-alpine
     environment:
       POSTGRES_USER: todouser
-      POSTGRES_PASSWORD: 
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
       POSTGRES_DB: todolist
     volumes:
       - pgdata:/var/lib/postgresql/data
@@ -14,26 +14,24 @@
     environment:
       DB_HOST: db
       DB_USER: todouser
-      DB_PASSWORD: 
+      DB_PASSWORD: ${DB_PASSWORD}
       DB_NAME: todolist
       DB_PORT: 5432
       PORT: 3000
     depends_on:
-      
-db
-  restart: unless-stopped
+      - db
+    restart: unless-stopped
 
   nginx:
     image: nginx:alpine
     ports:
-      
-"80:80"
-  volumes:
-./public:/usr/share/nginx/html
-./deploy/nginx-todolist.conf:/etc/nginx/conf.d/default.conf
-depends_on:
-backend
-restart: unless-stopped
+      - "80:80"
+    volumes:
+      - ./public:/usr/share/nginx/html
+      - ./deploy/nginx-todolist.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - backend
+    restart: unless-stopped
 
 volumes:
   pgdata:
